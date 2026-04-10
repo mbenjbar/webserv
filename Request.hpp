@@ -23,15 +23,19 @@ class Request
 			const std::string&							_raw;
 
 			/*** PARSING ***/
-			// int			rFirstLine(const std::string& line);
-			// std::string	nextLine(const std::string &str, size_t& i);
-			// int			rPath(const std::string& line, size_t i);
-			// int			rVersion(const std::string& line, size_t i);
-			// int			Method_check();
-			// int			Port();
-			// void		    Query();
-			// std::string format_Header_CGI(std::string& key);
-			// void		setLang();
+			int				FirstLine(const std::string& line);
+			std::string		nextLine(const std::string &str, size_t& i);
+			int				rPath(const std::string& line, size_t i);
+			int				rVersion(const std::string& line, size_t i);
+			std::string		rKey(std::string line);
+			std::string		rValue(std::string line);
+			int				Method_check();
+			int				Port();
+			void			Query();
+			std::string 	format_Header_CGI(std::string& key);
+			void			setLang();
+
+			
 
 
 			// https methods that can be used
@@ -49,17 +53,17 @@ class Request
 			Request&	operator=(const Request&);
 
 			/*** GETTERS ***/
-			const std::map<std::string, std::string>&			get_Headers() const;
-			const std::map<std::string, std::string>&			get_Env() const;
-			const std::string&									get_Method() const;
-			const std::string&									get_Version() const;
-			const std::string&									get_Path() const;
-			const std::string&									get_Body() const;
+			const std::map<std::string, std::string>			&get_Headers() const;
+			const std::map<std::string, std::string>			&get_Env() const;
+			const std::string									&get_Method() const;
+			const std::string									&get_Version() const;
+			const std::string									&get_Path() const;
+			const std::string									&get_Body() const;
 			int													get_Port() const;
-			const std::string&									get_Query() const;
+			const std::string									&get_Query() const;
 			int													get_Ret() const;
-			const std::string&									get_Raw() const;
-			const std::list<std::pair<std::string, float> >&	get_Lang() const;
+			const std::string									&get_Raw() const;
+			const std::list<std::pair<std::string, float> >		&get_Lang() const;
 
 			/*** SETTERS **/
 			void	setMethod(const std::string &method);
@@ -67,14 +71,16 @@ class Request
 			void	setRet(int);
 
 			/*** UTILS ****/
-			int		parse(const std::string& str);
-			void	resetHeaders();
-			void	stripAll();
-			void	displayHeaders() const;
+			int				parse(const std::string& str);
+			void			resetHeaders();
+			void			stripAll();
+			void			displayHeaders() const;
 
 			static std::vector<std::string>		initMethods();
 
 };
+
+
 
 Request::~Request()
 {
