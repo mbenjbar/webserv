@@ -20,6 +20,21 @@ std::vector<std::string>		Request::initMethods()
 
 std::vector<std::string>	Request::methods = Request::initMethods();
 
+std::string	    Request::nextLine(const std::string &str, size_t& start)
+{
+	std::string		ret;
+	size_t			j;
+
+	if (start == std::string::npos)
+		return "";
+	j = str.find_first_of('\n', start);
+	ret = str.substr(start, j - start);
+	if (ret[ret.size() - 1] == '\r')
+		pop(ret);
+	start = (j == std::string::npos ? j : j + 1);
+	return ret;
+}
+
 
 Request::Request(const std::string& str):
 	_method (""), _version(""), _ret(200), _body(""), _port(80), _path(""), _query(""), _raw(str)
@@ -57,36 +72,60 @@ int     Request::parse(const std::string& str)
 	return this->_ret;
 }
 
-int		Request::FirstLine(const std::string &str)
+std::string&					strip(std::string& str, char c)
 {
 	size_t	i;
-	std::string	line;
 
-	// i = str.find_first_of('\n');
-	// line = str.substr(0, i);
-	i = line.find_first_of(' ');
-
-	if (i == std::string::npos)
-	{
-		this->_ret = 400;
-		std::cerr << "RFL no space after method" << std::endl;
-		return 400;
-	}
-	this->_method.assign(line, 0, i);
-	return this->rPath(line, i);
+	if (!str.size())
+		return str;
+	i = str.size();
+	while (i && str[i - 1] == c)
+		i--;
+	str.resize(i);
+	for (i = 0; str[i] == c; i++);
+	str = str.substr(i, std::string::npos);
+	return str;
 }
 
-std::string	    Request::nextLine(const std::string &str, size_t& i)
+std::string&	to_lower(std::string& str)
 {
-	std::string		ret;
-	size_t			j;
+	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+	return str;
+}
 
-	if (i == std::string::npos)
-		return "";
-	j = str.find_first_of('\n', i);
-	ret = str.substr(i, j - i);
-	if (ret[ret.size() - 1] == '\r')
-		pop(ret);
-	i = (j == std::string::npos ? j : j + 1);
-	return ret;
+std::string&	capitalize(std::string &str)
+{
+	size_t	i = 0;
+
+	to_lower(str);
+	str[i] = std::toupper(str[i]);
+	while((i = str.find_first_of('-', i + 1)) != std::string::npos)
+	{
+		if (str[i + 1])
+			str[i + 1] = std::toupper(str[i + 1]);
+	}
+	return str;
+}
+
+std::string		Request::rKey(const std::string line)
+{
+	std::string	ret;
+	size_t	i;
+	
+	i = line.find_first_of(':'); //check
+	ret.append(line, 0 , i);
+	capitalize(ret);
+	return (strip(ret, ' '));
+}
+
+std::string		Request::rValue(const std::string line)
+{
+	size_t i;
+	std::string	ret;
+
+	i = line.find_first_of(':');
+	i = line.find_first_not_of(' ', i + 1);
+	if (i != std::string::npos)
+		ret.append(line, i, std::string::npos);
+	return (strip(ret, ' '));
 }

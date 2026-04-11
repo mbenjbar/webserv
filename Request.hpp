@@ -6,6 +6,7 @@
 # include <set>
 # include <vector>
 # include <list>
+#include <algorithm>
 
 class Request
 {
@@ -27,8 +28,8 @@ class Request
 			std::string		nextLine(const std::string &str, size_t& i);
 			int				rPath(const std::string& line, size_t i);
 			int				rVersion(const std::string& line, size_t i);
-			std::string		rKey(std::string line);
-			std::string		rValue(std::string line);
+			std::string		rKey(const std::string line);
+			std::string		rValue(const std::string line);
 			int				Method_check();
 			int				Port();
 			void			Query();
