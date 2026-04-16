@@ -23,9 +23,13 @@ int		Request::FirstLine(const std::string &str)
 
 int		Request::Method_check()
 {
-	for (size_t i = 0; i < this->methods.size(); i++)
+	size_t i = 0;
+	while (i < this->methods.size())
+	{
 		if (this->methods[i] == this->_method)
 			return this->_ret;
+		i++;
+	}
 	std::cerr << "Invalid method requested" << std::endl;
 	this->_ret = 400;
 	return this->_ret;

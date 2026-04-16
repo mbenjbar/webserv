@@ -33,7 +33,7 @@ class Request
 			int				Method_check();
 			int				Port();
 			void			Query();
-			std::string 	format_Header_CGI(std::string& key);
+			std::string 	format_Header_CGI(std::string &key);
 			void			setLang();
 
 			
