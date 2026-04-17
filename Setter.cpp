@@ -23,29 +23,37 @@ void	Request::setMethod(const std::string &method)
 	this->_method = method;
 }
 
-// void		Request::setLang()
-// {
-// 	std::vector<std::string>	token;
-// 	std::string					header;
-// 	size_t						i;
+void		Request::setLang()
+{
+	std::vector<std::string>	token;
+	size_t						i;
+	std::map<std::string, std::string>::iterator it;
 
-// 	if ((header = this->_headers["Accept-Language"]) != "")
-// 	{
-// 		token = split(header, ',');
-// 		for (std::vector<std::string>::iterator it = token.begin(); it != token.end(); it++)
-// 		{
-// 			float			weight = 0.0;
-// 			std::string		lang;
+	it = this->_headers.find("Accept-Language");
+	if (it != this->_headers.end())
+	{
+		token = split(it->second, ',');
 
-// 			lang = (*it).substr(0, (*it).find_first_of('-'));
-// 			strip(lang, ' ');
-// 			if ( (i = lang.find_last_of(';') ) != std::string::npos)
-// 			{
-// 				weight = atof( (*it).substr(i + 4).c_str() );
-// 			}
-// 			lang.resize(i > 2 ? 2 : i);
-// 			this->_lang.push_back(std::pair<std::string, float>(lang, weight));
-// 		}
-// 		this->_lang.sort(compare_langs);
-// 	}
-// }
+		std::vector<std::string>::iterator it_str = token.begin();
+
+		while (it_str != token.end())
+		{
+			float			weight = 1.0;
+			std::string		lang;
+
+			size_t pos = (*it_str).find_first_of("-;");
+			lang = (*it_str).substr(0, pos);
+			strip(lang, ' ');
+	
+			size_t qpos = (*it_str).find("q=");
+			if (qpos != std::string::npos)
+			    weight = atof((*it_str).substr(qpos + 2).c_str());
+
+				
+			this->_lang.push_back(std::pair<std::string, float>(lang, weight));
+			it_str++;
+		}
+
+		this->_lang.sort(compare_langs);
+	}
+}

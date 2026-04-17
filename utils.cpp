@@ -53,3 +53,19 @@ std::string		&strip(std::string& str, char c)
 
 	return (str);
 }
+
+std::vector<std::string>		split(const std::string &str, char c)
+{
+	std::vector<std::string> tokens;
+	std::string token;
+	std::istringstream tokenStream(str);
+
+	while (std::getline(tokenStream, token, c))
+		tokens.push_back(token);
+	return tokens;
+}
+
+bool compare_langs(const std::pair<std::string, float> first, const std::pair<std::string, float> second)
+{
+  return ( first.second > second.second );
+}

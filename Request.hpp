@@ -7,6 +7,8 @@
 # include <vector>
 # include <list>
 #include <algorithm>
+#include <sstream>
+#include <string>
 
 class Request
 {
