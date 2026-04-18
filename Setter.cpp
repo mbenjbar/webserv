@@ -6,11 +6,15 @@ void	Request::setBody(const std::string& str)
 	char	strip[] = {'\n', '\r'};
 
 	this->_body.assign(str);
-	for (int i = 0; i < 4; i++)
-		if (this->_body.size() > 0 && this->_body[this->_body.size() - 1] == strip[i % 2])
+	int i = 0;
+	while (i < 4)
+	{
+		if (!this->_body.empty() && (this->_body.back() == '\n' || this->_body.back() == '\r'))
 			pop(this->_body);
 		else
 			break ;
+		i++;
+	}	
 }
 
 void	Request::setRet(int ret)

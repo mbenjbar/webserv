@@ -60,6 +60,18 @@ std::string	    Request::nextLine(const std::string &str, size_t& start)
 	return ret;
 }
 
+void		Request::Query()
+{
+	size_t		i;
+
+	i = this->_path.find('?');
+	if (i != std::string::npos)
+	{
+		this->_query.assign(this->_path, i + 1, std::string::npos);
+		this->_path = this->_path.substr(0, i);
+	}
+}
+
 
 std::string 	Request::format_Header_CGI(std::string &key)
 {
@@ -99,4 +111,3 @@ int     Request::parse(const std::string& str)
 	this->Query();
 	return this->_ret;
 }
-
