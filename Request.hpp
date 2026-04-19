@@ -76,17 +76,12 @@ class Request
 
 			/*** UTILS ****/
 			int				parse(const std::string& str);
-			void			resetHeaders();
-			void			stripAll();
-			void			displayHeaders() const;
+			// void			resetHeaders();
+			// void			stripAll();
+			// void			displayHeaders() const;
 
 			static std::vector<std::string>		initMethods();
 
 };
 
-
-
-Request::~Request()
-{
-}
 std::ostream&	operator<<(std::ostream& os, const Request& re);

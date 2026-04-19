@@ -2,7 +2,7 @@
 #include "utils.hpp"
 
 Request::Request(const std::string& str):
-	_method (""), _version(""), _ret(200), _body(""), _port(80), _path(""), _query(""), _raw(str)
+	_method (""), _version(""), _path(""), _ret(200), _body(""), _query(""), _port(80), _raw(str)
 {
 	// this->resetHeaders();
     this->_headers.clear();
@@ -123,5 +123,21 @@ int     Request::parse(const std::string& str)
 	// this->Query();
 	this->Port();
 	return this->_ret;
+}
+
+std::ostream		&operator<<(std::ostream	&os, const Request	&re)
+{
+	std::map<std::string, std::string>::const_iterator	it;
+
+	os << "Method : " << re.get_Method() << " |\tHTTP version : "; os << re.get_Version() << '\n';
+	os << "Port : " << re.get_Port() << '\n';
+	os << "Path : " << re.get_Path() << '\n';
+
+	for (it = re.get_Headers().begin(); it != re.get_Headers().end(); it++)
+		os << it->first << ": " << it->second << '\n';
+
+	os << '\n' << "Request body :\n" << re.get_Body() << '\n';
+
+	return os;
 }
 

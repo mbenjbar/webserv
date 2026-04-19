@@ -30,7 +30,9 @@ std::string		Request::rValue(const std::string line)
     }
 	start = line.find_first_not_of(' ', start + 1);
     if (start == std::string::npos)
-        return (ret);	
+    {
+        return (ret);
+    }
 	ret = line.substr(start);
 	return (strip(ret, ' '));
 }
