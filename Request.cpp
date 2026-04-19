@@ -60,18 +60,6 @@ std::string	    Request::nextLine(const std::string &str, size_t& start)
 	return ret;
 }
 
-void		Request::Query()
-{
-	size_t		i;
-
-	i = this->_path.find('?');
-	if (i != std::string::npos)
-	{
-		this->_query.assign(this->_path, i + 1, std::string::npos);
-		this->_path = this->_path.substr(0, i);
-	}
-}
-
 
 std::string 	Request::format_Header_CGI(std::string &key)
 {
@@ -84,6 +72,30 @@ std::string 	Request::format_Header_CGI(std::string &key)
 		i++;
 	}
 	return ("HTTP_" + key);
+}
+
+int		Request::Port()
+{
+	std::map<std::string, std::string>::iterator it;
+	it = this->_headers.find("Host");
+
+	if (it == this->_headers.end())
+		this->_port = 80;
+	else
+	{
+		size_t i = it->second.find(':');
+		if (i == std::string::npos)
+            this->_port = 80;
+		else
+		{
+			std::string tmp = it->second.substr(i + 1);
+			this->_port = atoi(tmp.c_str());
+				if (this->_port <= 0 || this->_port > 65535)
+    					this->_port = 80;
+		}
+
+	}
+	return (this->_port);
 }
 
 int     Request::parse(const std::string& str)
@@ -108,6 +120,8 @@ int     Request::parse(const std::string& str)
 	// 	this->_env_for_cgi["Www-Authenticate"] = this->_headers["Www-Authenticate"];
 	this->setLang();
 	this->setBody(str.substr(i, std::string::npos));
-	this->Query();
+	// this->Query();
+	this->Port();
 	return this->_ret;
 }
+

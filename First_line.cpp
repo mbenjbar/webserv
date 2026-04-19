@@ -53,7 +53,20 @@ int		Request::rPath(const std::string& line, size_t i)
 		return 400;
 	}
 	this->_path.assign(line, start, end - start);
+	this->Query();
 	return this->rVersion(line, end);
+}
+
+void		Request::Query()
+{
+	size_t		i;
+
+	i = this->_path.find('?');
+	if (i != std::string::npos)
+	{
+		this->_query.assign(this->_path, i + 1, std::string::npos);
+		this->_path = this->_path.substr(0, i);
+	}
 }
 
 int		Request::rVersion(const std::string& line, size_t i)
